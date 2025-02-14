@@ -30,11 +30,6 @@ function Navbar() {
                 <a className="nav-link">Daily Form</a>
               </Link>
             </li>
-            <li className="nav-item">
-              <Link href="/admin">
-                <a className="nav-link">Admin</a>
-              </Link>
-            </li>
           </ul>
         </div>
       </div>
