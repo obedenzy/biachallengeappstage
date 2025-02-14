@@ -13,6 +13,9 @@ body {
     h1 {
       color: #007bff;
     }
+    .question-label {
+      margin-top: 1rem;
+    }
     label {
       margin-bottom: 0.5rem;
     }
@@ -51,7 +54,4 @@ body {
     }
     .radio-label {
       margin-top: 0rem !important;
-    }
-    .question-label {
-      margin-top: 1rem;
     }

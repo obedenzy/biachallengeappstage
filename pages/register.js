@@ -1,4 +1,10 @@
 import { useState } from 'react';
+    import { createClient } from '@supabase/supabase-js';
+
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    );
 
     function Register() {
       const [fullName, setFullName] = useState('');
@@ -64,48 +70,34 @@ import { useState } from 'react';
       const handleSubmit = async (event) => {
         event.preventDefault();
         setFormError('');
-        setIsSubmitted(false);
 
         if (!fullName || !cityGroup || !priority || !personalGoal) {
           setFormError('Please fill in all required fields.');
           return;
         }
 
-        const formData = {
-          formType: 'registration',
-          fullName,
-          cityGroup,
-          priority,
-          personalGoal,
-          leaderInterest
-        };
-
-        try {
-          const response = await fetch('/api/submit-form', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-          });
-
-          if (response.ok) {
-            console.log('Registration data submitted successfully');
-            setIsSubmitted(true);
-            // Reset form fields
-            setFullName('');
-            setCityGroup('');
-            setPriority('');
-            setPersonalGoal('');
-            setLeaderInterest(false);
-          } else {
-            const errorData = await response.json();
-            console.error('Registration form submission error:', errorData);
-            setFormError('Failed to submit registration. Please try again.');
+        const { data, error } = await supabase.from('participants').insert([
+          {
+            full_name: fullName,
+            city_group: cityGroup,
+            top_priority: priority,
+            personal_goal: personalGoal,
+            leader_interest: leaderInterest
           }
-        } catch (error) {
-          console.error('Network error on registration form submission:', error);
-          setFormError('Network error. Please check your connection.');
+        ]);
+
+        if (error) {
+          console.error('Error inserting data:', error);
+          setFormError('Failed to register. Please try again.');
+        } else {
+          console.log('Data inserted successfully:', data);
+          setIsSubmitted(true);
+          // Reset form fields
+          setFullName('');
+          setCityGroup('');
+          setPriority('');
+          setPersonalGoal('');
+          setLeaderInterest(false);
         }
       };
 
